@@ -19,9 +19,14 @@
 #ifndef __LOGGING_H__
 #define __LOGGING_H__
 
+#include <Adafruit_TinyUSB.h>
+
 #include "Global.h"
 
-#define LOG_OUTPUT                                      Serial
+extern Adafruit_USBD_WebUSB g_USBWeb;
+extern Adafruit_USBD_CDC g_USBSerial;
+
+#define LOG_OUTPUT                                      g_USBSerial
 
 #define LOG_LEVEL_SILENT                                0
 #define LOG_LEVEL_ERROR                                 1

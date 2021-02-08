@@ -118,6 +118,9 @@ STRUCT_GLOBAL_SETTINGS_AND_STATUS g_globalSettingsAndStatus;
 
 int g_iJumberRebounceLastISRTimeMillis = 0;
 
+Adafruit_USBD_WebUSB g_USBWeb;
+Adafruit_USBD_CDC g_USBSerial;
+
 /**
 *   RADIO THREAD: manage RADIO incoming and outgoing message 
 *
@@ -367,10 +370,11 @@ static void thread_Bridge( void *pvParameters ) {
 */
 static void thread_ATSettings( void *pvParameters ) {
 
-  g_ATSettings.init(&Serial, (STRUCT_GLOBAL_SETTINGS_AND_STATUS *)pvParameters, &g_xEventGroupMiscellaneousHandle, &g_xQueueATSettingsHandle);
+  g_ATSettings.init(&g_USBSerial, (STRUCT_GLOBAL_SETTINGS_AND_STATUS *)pvParameters, &g_xEventGroupMiscellaneousHandle, &g_xQueueATSettingsHandle);
 
   while (1) {
     g_ATSettings.pool();
+
     vTaskDelay(pdMS_TO_TICKS(10));
   }
  }
@@ -506,6 +510,23 @@ void jumperInterruptPinCallback(void) {
 }
 
 /**
+*   Callback when WEBUSB is connected or disconnected.
+*   This method switch AT Settings serial port from USBSERIAL to WEBUSB if available
+*   params: 
+*     p_bConnected: true if connected
+*   return:
+*       NONE       
+*/
+void USBWebLineStateCallback(bool p_bConnected) {
+  LOG_DEBUG_PRINTLN(LOG_PREFIX_MAIN, "WEBUSP", p_bConnected);
+  if (p_bConnected) {
+    g_ATSettings.updateSerialPort(&g_USBWeb);
+  } else {
+    g_ATSettings.updateSerialPort(&g_USBSerial);
+  }
+}
+
+/**
 *   setting-up. Operate as a MAIN
 *   params: 
 *     NONE
@@ -524,9 +545,15 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(JUMPER_PIN), jumperInterruptPinCallback, FALLING);
 
   //set USB serial
-  Serial.begin(115200);
-  //while (!Serial) ;  //shall be commented
-  vSetErrorSerial(&Serial);
+  g_USBSerial.begin(115200);
+  //while (!g_USBSerial) ;  //shall be commented
+  vSetErrorSerial(&g_USBSerial);
+
+  //set WEB serial
+  WEBUSB_URL_DEF(l_landingPage, 1 /*https*/, _WEB_USB_LANDING_PAGE);
+  g_USBWeb.setLineStateCallback(USBWebLineStateCallback);
+  g_USBWeb.setLandingPage(&l_landingPage);
+  g_USBWeb.begin();
 
   //init status flashing led
   g_statusFlashLed.init(STATUS_LED_PIN, LOW, TIMER_PERIOD);
@@ -568,6 +595,8 @@ void setup() {
   g_globalSettingsAndStatus.strctRadioSettings.uiOutputPower = CCC1100::ENM_OUTPUT_POWER_DBM::PLUS_7;
 
   g_globalSettingsAndStatus.strctMiscellaneousSettings.uiReadSensorValuesMeasurementTimeout = _MISCELLANEOUS_READ_SENSOR_VALUES_TIMEOUT_;
+
+  _WEB_USB_LANDING_PAGE
 
   #ifdef BRIDGE_MODE 
     strcpy(g_globalSettingsAndStatus.strctBridgeSettings.strctAPIServerSettings.cHostname, _BRIDGE_DEVELOP_HOSTNAME_);

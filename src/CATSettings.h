@@ -19,6 +19,8 @@
 #ifndef __CSETDEVICE_H__
 #define __CSETDEVICE_H__
 
+#include "Adafruit_TinyUSB.h"
+
 #include "global.h"
 #include "logging.h"
 #include "CHTU21.h"
@@ -49,9 +51,10 @@
 
 class CATSettings {
 public:
-    void init(Serial_ *p_pSerialPort, STRUCT_GLOBAL_SETTINGS_AND_STATUS *p_pGlobalSettingsAndStatus, 
-            EventGroupHandle_t *p_pxEventGroupMiscellaneousHandle, QueueHandle_t *p_pxQueueATSettingsHandle);
+    void init(Stream *p_pSerialPort, STRUCT_GLOBAL_SETTINGS_AND_STATUS *p_pGlobalSettingsAndStatus, 
+            EventGroupHandle_t *p_pxEventGroupMiscellaneousHandle, QueueHandle_t *p_pxQueueATSettingsHandle);     
     void pool() ;
+    void updateSerialPort(Stream *p_pSerialPort);
 
 private:
     enum ENM_METHOD {GET, SET, DO, UNKNOWN};
@@ -67,7 +70,7 @@ private:
     EventGroupHandle_t  *m_pxEventGroupMiscellaneousHandle;
     QueueHandle_t       *m_pxQueueATSettingsHandle;
 
-    Serial_             *m_pSerialPort;
+    Stream             *m_pSerialPort;
     char                m_bufferIncoming[MAX_SETTINGSDEVICE_INCOMING_BUFFER_LENGTH];
     uint16_t            m_cBufferIncomingIndex;
     char                m_cBufferMiscallaneous[MAX_AT_BUFFER_MISCELLANEOUS];

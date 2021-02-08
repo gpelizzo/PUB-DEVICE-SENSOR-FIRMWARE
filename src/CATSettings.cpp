@@ -65,7 +65,7 @@
 *   return:
 *       NONE      
 */
-void CATSettings::init(Serial_*p_pSerialPort, STRUCT_GLOBAL_SETTINGS_AND_STATUS *p_pGlobalSettingsAndStatus, 
+void CATSettings::init(Stream *p_pSerialPort, STRUCT_GLOBAL_SETTINGS_AND_STATUS *p_pGlobalSettingsAndStatus, 
                         EventGroupHandle_t *p_pxEventGroupMiscellaneousHandle, QueueHandle_t *p_pxQueueATSettingsHandle) {
     m_pSerialPort = p_pSerialPort;
     m_pGlobalSettingsAndStatus = p_pGlobalSettingsAndStatus;
@@ -83,7 +83,9 @@ void CATSettings::init(Serial_*p_pSerialPort, STRUCT_GLOBAL_SETTINGS_AND_STATUS 
 *       NONE      
 */
 void CATSettings::pool() {
-    if (*m_pSerialPort) {
+
+    if (m_pSerialPort) {
+
         if (m_pSerialPort->available()) {
             if (m_cBufferIncomingIndex < MAX_SETTINGSDEVICE_INCOMING_BUFFER_LENGTH) {
                 m_bufferIncoming[m_cBufferIncomingIndex++] = m_pSerialPort->read();
@@ -103,6 +105,18 @@ void CATSettings::pool() {
             }
         }
     }
+}
+
+
+/**
+*   Change serial port 
+*   params: 
+*       p_pSerialPort:  Serial port pointer
+*   return:
+*       NONE      
+*/
+void CATSettings::updateSerialPort(Stream *p_pSerialPort) {
+    m_pSerialPort = p_pSerialPort;
 }
 
 /**

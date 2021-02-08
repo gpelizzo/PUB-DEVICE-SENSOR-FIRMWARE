@@ -7,7 +7,7 @@
 #include "CFlashLed.h"
 
 #define VERSION_MAJOR               1
-#define VERSION_MINOR               0  
+#define VERSION_MINOR               1  
 
 //-------------------------------------------------------------------------------------------------------
 //toogle directive below to enable or disable development mode avoiding to proceed initial settings
@@ -62,7 +62,7 @@
 
     #ifdef _DEVELOP_
         //default settings to use during development 
-        #define _RADIO_DEVELOP_DEVICE_ADDR_                 3
+        #define _RADIO_DEVELOP_DEVICE_ADDR_                 6
         #define _RADIO_DEVELOP_SERVER_ADDR_                 1
         #define _RADIO_DEVELOP_KEEPALIVE_TIMEOUT            1       //minutes
         #define _MISCELLANEOUS_READ_SENSOR_VALUES_TIMEOUT_  1       //minutes
@@ -73,6 +73,8 @@
     #define _RADIO_MSG_SIGNATURE                            0x52E3  
     #define _MAX_RADIO_RETRIES_                             3
 #endif
+
+#define _WEB_USB_LANDING_PAGE                           "device-settings.gepeo.fr/index.html"
 
 #define STATUS_LED_PIN                                  13
 #define ESP8266_RESET_PIN                               0
