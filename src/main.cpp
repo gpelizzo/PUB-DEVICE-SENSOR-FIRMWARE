@@ -260,10 +260,15 @@ static void thread_SensorValues( void *pvParameters ) {
 
   xTimerStart(g_xTimerReadSensorValuesHandle, 0);
 
+  //boot time: send sensor values
+  xEventGroupSetBits(g_xEventGroupTimersHandle, BIT_EVENT_GROUP_TIMERS__READ_SENSOR_VALUES_TIMER_EXPIRES);
+
   while (1)
   {
     //wait for BIT_EVENT_GROUP_TIMERS__READ_SENSOR_VALUES_TIMER_EXPIRES to bet set, meaning timer has expired
     if (xEventGroupWaitBits(g_xEventGroupTimersHandle, BIT_EVENT_GROUP_TIMERS__READ_SENSOR_VALUES_TIMER_EXPIRES, pdTRUE, pdFALSE, 0) & BIT_EVENT_GROUP_TIMERS__READ_SENSOR_VALUES_TIMER_EXPIRES) {
+
+      LOG_DEBUG_PRINTLN(LOG_PREFIX_MAIN, "Sensor timer occured", "");
 
       //retreive sensor values
       l_strctSensorValues = g_htu21Device.getSensorValues();

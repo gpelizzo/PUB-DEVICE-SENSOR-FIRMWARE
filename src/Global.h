@@ -7,7 +7,7 @@
 #include "CFlashLed.h"
 
 #define VERSION_MAJOR               1
-#define VERSION_MINOR               1  
+#define VERSION_MINOR               2  
 
 //-------------------------------------------------------------------------------------------------------
 //toogle directive below to enable or disable development mode avoiding to proceed initial settings
@@ -15,8 +15,8 @@
 #undef _DEVELOP_
 
 //toogle directive below to enable or disable bridge mode=server mode
-//#define BRIDGE_MODE
-#undef BRIDGE_MODE
+#define BRIDGE_MODE
+//#undef BRIDGE_MODE
 //-------------------------------------------------------------------------------------------------------
 
 #ifdef BRIDGE_MODE
