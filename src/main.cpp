@@ -196,7 +196,7 @@ static void thread_Radio( void *pvParameters ) {
     l_strctRadioBuffer.abyData[0] = l_strctPostMessage.strctSensorValues.byTemperatureQuotientValue;
     l_strctRadioBuffer.abyData[1] = l_strctPostMessage.strctSensorValues.byTemperatureRemaindertValue;
     l_strctRadioBuffer.abyData[2] = l_strctPostMessage.strctSensorValues.byHumidityQuotientValue;
-    l_strctRadioBuffer.abyData[3] = l_strctPostMessage.strctSensorValues.byTemperatureQuotientValue;
+    l_strctRadioBuffer.abyData[3] = l_strctPostMessage.strctSensorValues.byHumidityRemaindertValue;
 
     l_strctRadioBuffer.abyData[4] = l_strctPostMessage.strctSensorValues.byPartialPressureQuotientValue;
     l_strctRadioBuffer.abyData[5] = l_strctPostMessage.strctSensorValues.byPartialPressureRemaindertValue;
@@ -278,7 +278,7 @@ static void thread_SensorValues( void *pvParameters ) {
       l_strctPostMessage.strctSensorValues.byTemperatureQuotientValue = (byte)l_strctSensorValues.fTemperatureValue;
       l_strctPostMessage.strctSensorValues.byTemperatureRemaindertValue = (byte)((l_strctSensorValues.fTemperatureValue - (byte)l_strctSensorValues.fTemperatureValue) * 100);
       l_strctPostMessage.strctSensorValues.byHumidityQuotientValue = (byte)l_strctSensorValues.fHumidityValue;
-      l_strctPostMessage.strctSensorValues.byTemperatureRemaindertValue = (byte)((l_strctSensorValues.fHumidityValue - (byte)l_strctSensorValues.fHumidityValue) * 100);
+      l_strctPostMessage.strctSensorValues.byHumidityRemaindertValue = (byte)((l_strctSensorValues.fHumidityValue - (byte)l_strctSensorValues.fHumidityValue) * 100);
       l_strctPostMessage.strctSensorValues.byPartialPressureQuotientValue = (byte)l_strctSensorValues.fPartialPressureValue;
       l_strctPostMessage.strctSensorValues.byPartialPressureRemaindertValue = (byte)((l_strctSensorValues.fPartialPressureValue - (byte)l_strctSensorValues.fPartialPressureValue) * 100);
       l_strctPostMessage.strctSensorValues.byDewPointeQuotientValue = (byte)l_strctSensorValues.fDewPointTemperatureValue;
